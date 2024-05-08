@@ -21,17 +21,8 @@ namespace FunctionRESTAPI.Functions
         [Function("GetPets")]
         public async Task<IActionResult> GetAllPets([HttpTrigger(AuthorizationLevel.Function, "get", Route = "pet")] HttpRequest req)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
-
-            string functionKey = req.Headers["x-functions-key"];
-            string expectedKey = Environment.GetEnvironmentVariable("Labb3SecretKey");
-
-            if (functionKey != expectedKey)
-            {
-                return new UnauthorizedResult();
-            }
-
             var pets = await _context.Pets.ToListAsync();
+            _logger.LogInformation("All pets has been successfully received!");
             return new OkObjectResult(pets);
         }
     }

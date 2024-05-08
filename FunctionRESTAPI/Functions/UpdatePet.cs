@@ -23,33 +23,26 @@ namespace FunctionRESTAPI.Functions
         [Function("UpdatePet")]
         public async Task<IActionResult> PutPet([HttpTrigger(AuthorizationLevel.Function, "put", Route = "pet/{id}")] HttpRequest req, int id)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
-
-            string functionKey = req.Headers["x-functions-key"];
-            string expectedKey = Environment.GetEnvironmentVariable("Labb3SecretKey");
-
-            if (functionKey != expectedKey)
-            {
-                return new UnauthorizedResult();
-            }
-
             var selectedPet = await _context.Pets.FirstOrDefaultAsync(p => p.Id == id);
 
-            if (selectedPet == null) return new NotFoundResult();
-            else
+            if (selectedPet == null)
             {
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                var updatedPet = JsonConvert.DeserializeObject<Pet>(requestBody);
-                selectedPet.Name = updatedPet.Name;
-                selectedPet.Owner = updatedPet.Owner;
-                selectedPet.Age = updatedPet.Age;
-                selectedPet.Type = updatedPet.Type;
-                _context.Pets.Update(selectedPet);
-                await _context.SaveChangesAsync();
-                return new OkObjectResult(selectedPet);
+                _logger.LogInformation("The requested pet could not be found!");
+                return new NotFoundResult();
             }
 
-            
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            var updatedPet = JsonConvert.DeserializeObject<Pet>(requestBody);
+
+            selectedPet.Name = updatedPet.Name;
+            selectedPet.Owner = updatedPet.Owner;
+            selectedPet.Age = updatedPet.Age;
+            selectedPet.Type = updatedPet.Type;
+
+            _context.Pets.Update(selectedPet);
+            await _context.SaveChangesAsync();
+            _logger.LogInformation("Pet successfully updated!");
+            return new OkObjectResult(selectedPet);
         }
     }
 }

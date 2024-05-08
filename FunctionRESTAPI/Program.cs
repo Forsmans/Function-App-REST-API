@@ -11,7 +11,7 @@ using Microsoft.Extensions.Hosting;
 var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
     .ConfigureServices((hostContext, services) =>
-    {
+    {   
         string sqlConnectionString = Environment.GetEnvironmentVariable("SqlConnectionStringLabb3");
 
         services.AddDbContext<AppDbContext>(options =>

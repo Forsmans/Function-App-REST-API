@@ -21,19 +21,14 @@ namespace FunctionRESTAPI.Functions
         [Function("GetPet")]
         public async Task<IActionResult> GetPetId([HttpTrigger(AuthorizationLevel.Function, "get", Route = "pet/{id}")] HttpRequest req, int id)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
-
-            string functionKey = req.Headers["x-functions-key"];
-            string expectedKey = Environment.GetEnvironmentVariable("Labb3SecretKey");
-
-            if (functionKey != expectedKey)
+            var pet = await _context.Pets.FirstOrDefaultAsync(p => p.Id == id);
+            if (pet == null)
             {
-                return new UnauthorizedResult();
+                _logger.LogInformation("The requested pet could not be found!");
+                return new NotFoundResult();
             }
 
-            var pet = await _context.Pets.FirstOrDefaultAsync(p => p.Id == id);
-            if (pet == null) return new NotFoundResult();
-
+            _logger.LogInformation("The pet has been successfully received!");
             return new OkObjectResult(pet);
         }
     }

@@ -22,21 +22,12 @@ namespace FunctionRESTAPI.Functions
         [Function("AddPet")]
         public async Task<IActionResult> PostPet([HttpTrigger(AuthorizationLevel.Function, "post", Route = "pet")] HttpRequest req)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
-
-            string functionKey = req.Headers["x-functions-key"];
-            string expectedKey = Environment.GetEnvironmentVariable("Labb3SecretKey");
-
-            if (functionKey != expectedKey)
-            {
-                return new UnauthorizedResult();
-            }
-
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var pet = JsonConvert.DeserializeObject<Pet>(requestBody);
             _context.Pets.Add(pet);
             await _context.SaveChangesAsync();
+            _logger.LogInformation("A new pet has been successfully added!");
             return new CreatedResult("/pets", pet);
         }
     }

@@ -21,22 +21,16 @@ namespace FunctionRESTAPI.Functions
         [Function("DeletePet")]
         public async Task<IActionResult> RemovePet([HttpTrigger(AuthorizationLevel.Function, "delete", Route = "pet/{id}")] HttpRequest req, int id)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
-
-            string functionKey = req.Headers["x-functions-key"];
-            string expectedKey = Environment.GetEnvironmentVariable("Labb3SecretKey");
-
-            if (functionKey != expectedKey)
-            {
-                return new UnauthorizedResult();
-            }
-
             var pet = await _context.Pets.FirstOrDefaultAsync(p => p.Id == id);
-            if (pet == null) return new NotFoundResult();
+            if (pet == null)
+            {
+                _logger.LogInformation("The requested pet could not be found!");
+                return new NotFoundResult();
+            }
 
             _context.Pets.Remove(pet);
             await _context.SaveChangesAsync();
-
+            _logger.LogInformation("The pet has been successfully removed!");
             return new NoContentResult();
         }
     }
