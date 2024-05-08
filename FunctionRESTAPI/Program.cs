@@ -1,12 +1,10 @@
 using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
 using FunctionRESTAPI.Data;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
 
 
 var host = new HostBuilder()
