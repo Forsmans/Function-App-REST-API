@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FunctionRESTAPI
+namespace FunctionRESTAPI.Models
 {
     public class Pet
     {

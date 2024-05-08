@@ -1,6 +1,6 @@
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
-using FunctionRESTAPI;
+using FunctionRESTAPI.Data;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
