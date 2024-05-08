@@ -6,13 +6,20 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 
 var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
+    .ConfigureAppConfiguration((context, config) =>
+    {
+        var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("Labb3VaultUri"));
+        config.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
+    })
     .ConfigureServices((hostContext, services) =>
-    {   
-        string sqlConnectionString = Environment.GetEnvironmentVariable("SqlConnectionStringLabb3");
+    {
+        var configuration = hostContext.Configuration;
+        string sqlConnectionString = configuration["SqlConnectionString"];
 
         services.AddDbContext<AppDbContext>(options =>
         {
