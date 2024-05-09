@@ -11,7 +11,7 @@ var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
     .ConfigureAppConfiguration((context, config) =>
     {
-        var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("Labb3VaultUri"));
+        var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri"));
         config.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
     })
     .ConfigureServices((hostContext, services) =>
